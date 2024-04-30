@@ -30,7 +30,7 @@ export default {
   },
   methods: {},
   mounted(){
-    this.socket = io('http://localhost:5003');
+    this.socket = io('http://localhost:5001');
     
     this.socket.on('connect', () => {
         console.log('Connected to node client server');
@@ -57,7 +57,14 @@ export default {
      // Escucha los eventos de logs enviados por el servidor y actualiza la matriz de logs
     this.socket.on('log_message', (message) => {
       this.logs.unshift(`[${new Date().toLocaleTimeString()}] ${message}`);
+      this.logs.unshift(message);
     });
+
+    // En el método mounted del componente Vue
+    this.socket.on('update_simulated_time', (newTime) => {
+      this.simulated_time = newTime;
+    });
+
   },
 };
 </script>
