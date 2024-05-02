@@ -30,7 +30,7 @@ export default {
   },
   methods: {},
   mounted(){
-    this.socket = io('http://localhost:5001');
+    this.socket = io('http://localhost:5002');
     
     this.socket.on('connect', () => {
         console.log('Connected to node client server');
@@ -60,9 +60,13 @@ export default {
       this.logs.unshift(message);
     });
 
-    // En el método mounted del componente Vue
-    this.socket.on('update_simulated_time', (newTime) => {
-      this.simulated_time = newTime;
+    this.socket.on('simulated_client_time', (data) => {
+      if (data.clientUrl === this.connectionUrl) { 
+        console.log('Hora simulada recibida:', data.time,'urls' , data.clientUrl);
+        this.simulated_time = data.time; 
+      } else {
+        console.warn('Hora simulada recibida de una URL diferente:', data.ip);
+      }
     });
 
   },
